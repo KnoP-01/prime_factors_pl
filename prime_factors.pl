@@ -50,8 +50,7 @@ sub progressMsgFound
 {
     my $val     = shift(@_);
     my $devisor = shift(@_);
-    &resetDollarPipe;
-    print "progress: found devisor $devisor, remainder $val\n";
+    print "\rprogress: found devisor $devisor, remainder $val\n";
 }
 
 
