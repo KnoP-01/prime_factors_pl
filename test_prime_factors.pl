@@ -6,7 +6,7 @@ use warnings;
 push @INC , ".";
 require "prime_factors.pl";
 
-my $debug = 0;
+my $debug = 1;
 
 sub test_primes
 {
@@ -19,7 +19,7 @@ sub test_primes
     my @primesResult   = &primes($val2factor);
     if ( @primesResult ne @expectedResult )
     {
-        print "&primes($val2factor): does not return @expectedResult, but: <" . join(' ',@primesResult) . ">\n";
+        print "&primes($val2factor): does not return @expectedResult, but: <@primesResult>\n";
     }
 }
 
@@ -95,6 +95,12 @@ $val2factor=2*3*5*7*13*17*1117;
 #test big number
 $val2factor=297325219968;
 @expectedResult=qw/2 2 2 2 2 2 2 3 3 3 3 3 7 7 7 29 31 31/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test big number
+$val2factor=72570684380103;
+@expectedResult=qw/3 3 3 3 7 13 23 31 43 53 73 83/;
 &test_primes($val2factor, @expectedResult);
 
 

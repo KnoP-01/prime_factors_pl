@@ -16,6 +16,7 @@ sub isDevisible
     return 0;
 }
 
+
 sub primes
 {
     my $val         = shift(@_);
@@ -41,21 +42,21 @@ sub primes
     } else {
         print "result: $saveVal has factors @result\n";
     }
+
     return @result;
 }
 
 
-my $shortMsg = 0;
-if (defined $ARGV[0] and $ARGV[0]=~m/^(--short|-s)$/)
+if ($0 !~ m/(^|\W)prime_factors\.pl$/)
 {
-    # short output?
-    $shortMsg = 1;
-    shift @ARGV;
+    # if not called from shell directly by e.g. ./prime_factors.pl...
+    # return true to indicate successful execution to "require"
+    return 1;
 }
 
-if (not defined $ARGV[0] or $ARGV[0] !~ m/^\d+$/)
+
+sub printHelp 
 {
-    # help message
     print "Usage: prime_factors.pl [Option] N\n";
     print "  Prints the prime factors of N.\n";
     print "  N must be an integer without thousand separators!\n";
@@ -70,10 +71,27 @@ if (not defined $ARGV[0] or $ARGV[0] !~ m/^\d+$/)
     print "\n";
     print "  prime_factors.pl --short 36\n";
     print "  2 2 3 3\n";
-    exit 1;
 }
 
-# calculate prime factors
-&primes ($ARGV[0], $shortMsg);
 
-exit 0;
+# short output?
+my $shortMsg = 0;
+if (defined $ARGV[0] and $ARGV[0]=~m/^(--short|-s)$/)
+{
+    # --short or -s as first parameter: short output!
+    $shortMsg = 1;
+    shift @ARGV;
+}
+
+if (not defined $ARGV[0] or $ARGV[0] !~ m/^\d+$/)
+{
+    &printHelp;
+    exit 1;
+} else {
+    # calculate prime factors
+    &primes ($ARGV[0], $shortMsg);
+    exit 0;
+}
+
+
+1;
