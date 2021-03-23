@@ -6,7 +6,7 @@ use warnings;
 push @INC , ".";
 require "prime_factors.pl";
 
-my $debug = 1;
+my $debug = 0;
 
 sub test_primes
 {
