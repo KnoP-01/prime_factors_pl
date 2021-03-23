@@ -104,6 +104,12 @@ $val2factor=72570684380103;
 &test_primes($val2factor, @expectedResult);
 
 
+#test big number
+$val2factor=89213157642;
+@expectedResult=qw/2 3 7 139 15281459/;
+&test_primes($val2factor, @expectedResult);
+
+
 print "\n--------------\nTests finished\n";
 
 1;
