@@ -17,6 +17,13 @@ sub isDevisible
 }
 
 
+sub resetDollarPipe
+{
+    # turn off auto flushing and start a new line
+    if ($|) { $| = 0; print "\n"; }
+}
+
+
 sub progressMsgStart
 {
     my $val     = shift(@_);
@@ -43,8 +50,7 @@ sub progressMsgFound
 {
     my $val     = shift(@_);
     my $devisor = shift(@_);
-    # turn off auto flushing
-    if ($|) { print "\n"; $| = 0; }
+    &resetDollarPipe;
     print "progress: found devisor $devisor, remainder $val\n";
 }
 
@@ -71,8 +77,7 @@ sub primes
         }
         $devisor+=1;
     }
-    # turn off auto flushing
-    if ($|) { print "\n"; $| = 0; }
+    &resetDollarPipe;
 
     if ($msg)
     {
