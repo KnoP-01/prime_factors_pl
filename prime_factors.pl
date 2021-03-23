@@ -25,12 +25,14 @@ sub primes
     my @result      = qw//;
 
     my $devisor = 2;
+    print "Start calculating...\n";
 
     while ($val > 1)
     {
         while ( &isDevisible($val, $devisor) )
         {
             push (@result, $devisor);
+            print "progress: $devisor \n" if not $shortMsg;
             $val /= $devisor;
         }
         $devisor+=1;
