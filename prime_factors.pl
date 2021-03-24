@@ -4,6 +4,57 @@ use strict;
 use warnings;
 
 
+my $debug = 0;
+
+
+sub progressMsgStart
+{
+    my $val     = shift(@_);
+
+    print "Start calculating prime factors of $val...\n"
+}
+
+
+sub progressMsgDevisor
+{
+    my $devisor = shift(@_);
+
+    if ($devisor % 1000001 == 0) 
+    {
+        print "progress: checking prime factors > $devisor\r";
+    }
+    elsif ($devisor == 2)
+    {
+        $| = 1; # turn on auto flushing
+        print "progress: checking prime factors >= 2\r";
+    } 
+}
+
+
+sub progressMsgFound
+{
+    my $val     = shift(@_);
+    my $devisor = shift(@_);
+
+    print "progress: found prime factor $devisor, remainder $val\n";
+}
+
+
+sub progressMsgFinished
+{
+    my $msg         = shift(@_);
+    my $saveVal     = shift(@_);
+    my @result      = @_;
+
+    if ($msg)
+    {
+        print "result: $saveVal has factors @result\n";
+    } else {
+        print "@result\n";
+    }
+}
+
+
 sub isDevisible
 {
     my $val         = shift(@_);
@@ -17,74 +68,43 @@ sub isDevisible
 }
 
 
-sub resetDollarPipe
+sub foundDevisor
 {
-    # turn off auto flushing and start a new line
-    if ($|) { $| = 0; print "\n"; }
+    my $refResult   = $_[0];
+    my $refVal      = $_[1];
+    my $devisor     = $_[2];
+    my $msg         = $_[3];
+
+    push (@$refResult, $devisor);
+    $$refVal /= $devisor;
+    &progressMsgFound($$refVal, $devisor) if ($msg>=2);
 }
 
 
-sub progressMsgStart
-{
-    my $val     = shift(@_);
-    print "Start calculating devisors of $val...\n"
-}
-
-
-sub progressMsgDevisor
-{
-    my $devisor = shift(@_);
-    if ($devisor % 1000000 == 0) 
-    {
-        $| = 1; # turn on auto flushing
-        print "\rprogress: checking devisors > $devisor";
-    }
-    elsif ($devisor == 2)
-    {
-        print "progress: checking devisors >= 2\n";
-    } 
-}
-
-
-sub progressMsgFound
-{
-    my $val     = shift(@_);
-    my $devisor = shift(@_);
-    print "\rprogress: found devisor $devisor, remainder $val\n";
-}
-
-
-sub primes
+sub calcPrimeFactors
 {
     my $val         = shift(@_);
-    my $msg         = shift(@_); if (not defined $msg) { $msg = 1; }
+    my $msg         = shift(@_); $debug=1 if ($msg>=3);
     my $saveVal     = $val;
     my @result      = qw//;
 
-
     my $devisor = 2;
 
-    &progressMsgStart($val) if ($msg==2);
-    while ( $val>=$devisor )
+    &progressMsgStart($val) if ($msg>=2);
+    while ( $val>=$devisor and $val>1 )
     {
-        &progressMsgDevisor($devisor) if ($msg==2);
+        &progressMsgDevisor($devisor) if ($msg>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            push (@result, $devisor);
-            $val /= $devisor;
-            &progressMsgFound($val, $devisor) if ($msg==2);
+            &foundDevisor(\@result, \$val, $devisor, $msg);
+            print "result so far: @result\n" if ($debug);
         }
-        $devisor+=1;
-    }
-    &resetDollarPipe;
-
-    if ($msg)
-    {
-        print "result: $saveVal has factors @result\n";
-    } else {
-        print "@result\n";
+        if ( $devisor==2 ) { $devisor = 3; }    # after 2 check 3
+        else { $devisor += 2; }                 # don't check any other even number than 2
+        if ( $devisor>$val/$devisor ) { $devisor = $val; }
     }
 
+    &progressMsgFinished($msg, $saveVal, @result);
     return @result;
 }
 
@@ -104,8 +124,9 @@ sub printHelp
     print "  N must be an integer without thousand separators!\n";
     print "\n";
     print "  Option:\n";
-    print "  --short, -s    : Print only the factors\n";
-    print "  --verbose, -v  : Print more verbose messages\n";
+    print "  --short, -s     : Print only the factors\n";
+    print "  --verbose, -v   : Print more verbose messages\n";
+    print "  --vverbose, -vv : Print very verbose messages\n";
     print "\n";
     print "Example: \n";
     print "\n";
@@ -117,18 +138,13 @@ sub printHelp
 }
 
 
-# chose messages
+# chose message style
 my $msg = 1;
-if (defined $ARGV[0] and $ARGV[0]=~m/^(--short|-s)$/)
+if (defined $ARGV[0] and $ARGV[0]=~m/^-/) # first argument starts with "-", assume option
 {
-    # --short or -s as first parameter: short output!
-    $msg = 0;
-    shift @ARGV;
-}
-if (defined $ARGV[0] and $ARGV[0]=~m/^(--verbose|-v)$/)
-{
-    # --verbose or -v as first parameter: verbose output!
-    $msg = 2;
+    if ($ARGV[0]=~m/^(--short|-s)$/)     { $msg = 0; }
+    if ($ARGV[0]=~m/^(--verbose|-v)$/)   { $msg = 2; }
+    if ($ARGV[0]=~m/^(--vverbose|-vv)$/) { $msg = 3; }
     shift @ARGV;
 }
 
@@ -137,8 +153,7 @@ if (not defined $ARGV[0] or $ARGV[0] !~ m/^\d+$/)
     &printHelp;
     exit 1;
 } else {
-    # calculate prime factors
-    &primes ($ARGV[0], $msg);
+    &calcPrimeFactors ($ARGV[0], $msg);
     exit 0;
 }
 

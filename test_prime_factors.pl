@@ -6,6 +6,7 @@ use warnings;
 push @INC , ".";
 require "prime_factors.pl";
 
+# valid values for $debug are the valid values of $msg in prime_factors.pl
 my $debug = 0;
 
 sub test_primes
@@ -16,14 +17,18 @@ sub test_primes
 
     print "\nexpect: $val2factor has factors @expectedResult\n" if $debug;
 
-    my @primesResult   = &primes($val2factor);
+    my @primesResult   = &calcPrimeFactors($val2factor, $debug);
     if ( @primesResult ne @expectedResult )
     {
-        print "&primes($val2factor): does not return @expectedResult, but: <@primesResult>\n";
+        print "&calcPrimeFactors($val2factor): does not return @expectedResult, but: <@primesResult>\n";
     }
 }
 
 
+if ( defined $ARGV[0] and ( $ARGV[0]>=0 and $ARGV[0]<=3 ) )
+{
+    $debug=$ARGV[0]
+}
 print "\nStart tests...\n--------------\n";
 
 
@@ -64,7 +69,7 @@ $val2factor=5;
 
 #test 6
 $val2factor=6;
-@expectedResult=qw/2 3/;
+@expectedResult=qw/3 2/;
 &test_primes($val2factor, @expectedResult);
 
 
@@ -107,6 +112,30 @@ $val2factor=72570684380103;
 #test big number
 $val2factor=89213157642;
 @expectedResult=qw/2 3 7 139 15281459/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test big number with some really big factors
+$val2factor=234879500555555;
+@expectedResult=qw/5 4937 9515069903/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test really big number with some really big factors
+$val2factor=1151542165183435111;
+@expectedResult=qw/1048127 1048129 1048217/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test really big number with some really big factors
+$val2factor=2151542165183435111;
+@expectedResult=qw/89 25784303 937571633/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test really big number with some really big factors
+$val2factor=11515421651834351117;
+@expectedResult=qw/2551 4514081400170267/;
 &test_primes($val2factor, @expectedResult);
 
 
