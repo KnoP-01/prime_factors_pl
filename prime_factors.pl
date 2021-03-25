@@ -66,11 +66,11 @@ sub progressMsgFinished
         print "@_\n";
     }
     return 0;
-    # my $msg         = shift(@_);
+    # my $verbosity   = shift(@_);
     # my $saveVal     = shift(@_);
     # my @result      = @_;
 
-    # if ($msg)
+    # if ($verbosity)
     # {
     #     print "result: $saveVal has factors @result\n";
     # } else {
@@ -112,61 +112,61 @@ sub foundDevisorAction
     # my $refResult   = $_[0];
     # my $refVal      = $_[1];
     # my $devisor     = $_[2];
-    # my $msg         = $_[3];
+    # my $verbosity   = $_[3];
 
     # push (@$refResult, $devisor);
     # $$refVal /= $devisor;
-    # &progressMsgFound($devisor, $$refVal) if ($msg>=2);
+    # &progressMsgFound($devisor, $$refVal) if ($verbosity>=2);
 }
 
 
 sub calcPrimeFactors
 {
     my $val         = shift(@_);
-    my $msg         = shift(@_); $debug=1 if ($msg>=3);
+    my $verbosity   = shift(@_); $debug=1 if ($verbosity>=3);
     my $saveVal     = $val;
     my @result      = qw//;
 
 
-    &progressMsgStart($val) if ($msg>=2);
+    &progressMsgStart($val) if ($verbosity>=2);
 
     my $devisor = 2;
     if ( $val>=$devisor and $val>1 )
     {
-        &progressMsgDevisor($devisor) if ($msg>=2);
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisorAction(\@result, \$val, $devisor, $msg);
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
     }
 
     $devisor = 3;
     if ( $val>=$devisor and $val>1 )
     {
-        &progressMsgDevisor($devisor) if ($msg>=2);
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisorAction(\@result, \$val, $devisor, $msg);
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
     }
 
     $devisor = 5;
     if ( $val>=$devisor and $val>1 )
     {
-        &progressMsgDevisor($devisor) if ($msg>=2);
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisorAction(\@result, \$val, $devisor, $msg);
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
     }
 
     $devisor = 7;
     while ( $val>=$devisor and $val>1 )
     {
-        &progressMsgDevisor($devisor) if ($msg>=2);
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisorAction(\@result, \$val, $devisor, $msg);
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
         $devisor += 2;
         if ( $devisor%5 == 0 ) { 
@@ -175,7 +175,7 @@ sub calcPrimeFactors
         }
     }
 
-    &progressMsgFinished($msg, $saveVal, @result);
+    &progressMsgFinished($verbosity, $saveVal, @result);
     return @result;
 }
 
@@ -210,12 +210,12 @@ sub printHelp
 
 
 # chose message style
-my $msg = 1;
+my $verbosity = 1;
 if (defined $ARGV[0] and $ARGV[0]=~m/^-/) # first argument starts with "-", assume option
 {
-    if ($ARGV[0]=~m/^(--short|-s)$/)     { $msg = 0; }
-    if ($ARGV[0]=~m/^(--verbose|-v)$/)   { $msg = 2; }
-    if ($ARGV[0]=~m/^(--vverbose|-vv)$/) { $msg = 3; }
+    if ($ARGV[0]=~m/^(--short|-s)$/)     { $verbosity = 0; }
+    if ($ARGV[0]=~m/^(--verbose|-v)$/)   { $verbosity = 2; }
+    if ($ARGV[0]=~m/^(--vverbose|-vv)$/) { $verbosity = 3; }
     shift @ARGV;
 }
 
@@ -224,7 +224,7 @@ if (not defined $ARGV[0] or $ARGV[0] !~ m/^\d+$/)
     &printHelp;
     exit 1;
 } else {
-    &calcPrimeFactors ($ARGV[0], $msg);
+    &calcPrimeFactors ($ARGV[0], $verbosity);
     exit 0;
 }
 
