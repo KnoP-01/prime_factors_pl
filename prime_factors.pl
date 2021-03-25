@@ -48,8 +48,8 @@ sub progressMsgFound
     print "progress: found prime factor " . shift(@_) . ", remainder " . shift(@_) . "\n";
     print "result so far: @_\n" if ($debug);
     return 0;
-    # my $val     = shift(@_);
     # my $devisor = shift(@_);
+    # my $val     = shift(@_);
     # my @result  = @_;
 
     # print "progress: found prime factor $devisor, remainder $val\n";
@@ -107,7 +107,7 @@ sub foundDevisorAction
 
     push (@$refResult, $_[2]);
     $$refVal /= $_[2];
-    &progressMsgFound($$refVal, $_[2], @$refResult) if ($_[3]>=2);
+    &progressMsgFound($_[2], $$refVal, @$refResult) if ($_[3]>=2);
     return 0;
     # my $refResult   = $_[0];
     # my $refVal      = $_[1];
@@ -116,7 +116,7 @@ sub foundDevisorAction
 
     # push (@$refResult, $devisor);
     # $$refVal /= $devisor;
-    # &progressMsgFound($$refVal, $devisor) if ($msg>=2);
+    # &progressMsgFound($devisor, $$refVal) if ($msg>=2);
 }
 
 
