@@ -6,6 +6,8 @@ use warnings;
 push @INC , ".";
 require "prime_factors.pl";
 
+use Time::HiRes qw/gettimeofday tv_interval/;
+
 # valid values for $debug are the valid values of $msg in prime_factors.pl
 my $debug = 0;
 
@@ -17,8 +19,11 @@ sub test_primes
 
     print "\nexpect: $val2factor has factors @expectedResult\n" if $debug;
 
+    my $t0 = [gettimeofday] if $debug;
     my @primesResult   = &calcPrimeFactors($val2factor, $debug);
-    if ( @primesResult ne @expectedResult )
+    print "time: " . tv_interval ( $t0, [gettimeofday]) . "\n" if $debug;
+
+    if ( @primesResult ne @expectedResult ) # evaluation
     {
         print "&calcPrimeFactors($val2factor): does not return @expectedResult, but: <@primesResult>\n";
     }
@@ -30,6 +35,7 @@ if ( defined $ARGV[0] and ( $ARGV[0]>=0 and $ARGV[0]<=3 ) )
     $debug=$ARGV[0]
 }
 print "\nStart tests...\n--------------\n";
+my $t0 = [gettimeofday] if $debug;
 
 
 #test 0
@@ -139,6 +145,43 @@ $val2factor=11515421651834351117;
 &test_primes($val2factor, @expectedResult);
 
 
+#test search for an edge case
+$val2factor=1000113004255053391;
+@expectedResult=qw/1000037 1000037 1000039/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=6067231252638717023;
+@expectedResult=qw/1019 1021 1031 1033 2339 2341/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=34436317761268877;
+@expectedResult=qw/47 157 457 1021 10001779/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=900002340001517;
+@expectedResult=qw/30000037 30000041/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=2500183800062203;
+@expectedResult=qw/50000017 50003659/;
+&test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=1500111620135383;
+@expectedResult=qw/30000037 50003659/;
+&test_primes($val2factor, @expectedResult);
+
+
 print "\n--------------\nTests finished\n";
+print "time total: " . tv_interval ( $t0, [gettimeofday]) . "\n" if $debug;
 
 1;

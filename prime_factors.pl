@@ -88,9 +88,43 @@ sub calcPrimeFactors
     my $saveVal     = $val;
     my @result      = qw//;
 
-    my $devisor = 2;
 
     &progressMsgStart($val) if ($msg>=2);
+
+    my $devisor = 2;
+    if ( $val>=$devisor and $val>1 )
+    {
+        &progressMsgDevisor($devisor) if ($msg>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisor(\@result, \$val, $devisor, $msg);
+            print "result so far: @result\n" if ($debug);
+        }
+    }
+
+    $devisor = 3;
+    if ( $val>=$devisor and $val>1 )
+    {
+        &progressMsgDevisor($devisor) if ($msg>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisor(\@result, \$val, $devisor, $msg);
+            print "result so far: @result\n" if ($debug);
+        }
+    }
+
+    $devisor = 5;
+    if ( $val>=$devisor and $val>1 )
+    {
+        &progressMsgDevisor($devisor) if ($msg>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisor(\@result, \$val, $devisor, $msg);
+            print "result so far: @result\n" if ($debug);
+        }
+    }
+
+    $devisor = 7;
     while ( $val>=$devisor and $val>1 )
     {
         &progressMsgDevisor($devisor) if ($msg>=2);
@@ -99,9 +133,11 @@ sub calcPrimeFactors
             &foundDevisor(\@result, \$val, $devisor, $msg);
             print "result so far: @result\n" if ($debug);
         }
-        if ( $devisor==2 ) { $devisor = 3; }    # after 2 check 3
-        else { $devisor += 2; }                 # don't check any other even number than 2
-        if ( $devisor>$val/$devisor ) { $devisor = $val; }
+        $devisor += 2;
+        if ( $devisor%5 == 0 ) { 
+            $devisor += 2;
+            if ( $devisor>$val/$devisor ) { $devisor = $val; }
+        }
     }
 
     &progressMsgFinished($msg, $saveVal, @result);
