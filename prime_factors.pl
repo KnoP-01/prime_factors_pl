@@ -9,75 +9,114 @@ my $debug = 0;
 
 sub progressMsgStart
 {
-    my $val     = shift(@_);
+    print "Start calculating prime factors of $_[0]...\n";
+    return 0;
+    # my $val     = shift(@_);
 
-    print "Start calculating prime factors of $val...\n"
+    # print "Start calculating prime factors of $val...\n";
 }
 
 
 sub progressMsgDevisor
 {
-    my $devisor = shift(@_);
-
-    if ($devisor % 1000001 == 0) 
+    if ($_[0] % 1000001 == 0) 
     {
-        print "progress: checking prime factors > $devisor\r";
+        print "progress: checking prime factors > $_[0]\r";
     }
-    elsif ($devisor == 2)
+    elsif ($_[0] == 2)
     {
         $| = 1; # turn on auto flushing
         print "progress: checking prime factors >= 2\r";
     } 
+    return 0;
+    # my $devisor = shift(@_);
+
+    # if ($devisor % 1000001 == 0) 
+    # {
+    #     print "progress: checking prime factors > $devisor\r";
+    # }
+    # elsif ($devisor == 2)
+    # {
+    #     $| = 1; # turn on auto flushing
+    #     print "progress: checking prime factors >= 2\r";
+    # } 
 }
 
 
 sub progressMsgFound
 {
-    my $val     = shift(@_);
-    my $devisor = shift(@_);
+    print "progress: found prime factor " . shift(@_) . ", remainder " . shift(@_) . "\n";
+    print "result so far: @_\n" if ($debug);
+    return 0;
+    # my $val     = shift(@_);
+    # my $devisor = shift(@_);
+    # my @result  = @_;
 
-    print "progress: found prime factor $devisor, remainder $val\n";
+    # print "progress: found prime factor $devisor, remainder $val\n";
+    # print "result so far: @result\n" if ($debug);
 }
 
 
 sub progressMsgFinished
 {
-    my $msg         = shift(@_);
-    my $saveVal     = shift(@_);
-    my @result      = @_;
-
-    if ($msg)
+    if (shift(@_))
     {
-        print "result: $saveVal has factors @result\n";
+        print "result: ".shift(@_)." has factors @_\n";
     } else {
-        print "@result\n";
+        print "@_\n";
     }
+    return 0;
+    # my $msg         = shift(@_);
+    # my $saveVal     = shift(@_);
+    # my @result      = @_;
+
+    # if ($msg)
+    # {
+    #     print "result: $saveVal has factors @result\n";
+    # } else {
+    #     print "@result\n";
+    # }
 }
 
 
 sub isDevisible
 {
-    my $val         = shift(@_);
-    my $devisor     = shift(@_);
-
-    if ($val % $devisor == 0) 
+    if ($_[0] % $_[1] == 0) 
     {
         return 1;
     }
     return 0;
+    # my $val         = shift(@_);
+    # my $devisor     = shift(@_);
+
+    # if ($val % $devisor == 0) 
+    # {
+    #     return 1;
+    # }
+    # return 0;
 }
 
 
-sub foundDevisor
+# pushes $devisor to @result
+# manipulates $val
+# give messages
+sub foundDevisorAction
 {
     my $refResult   = $_[0];
     my $refVal      = $_[1];
-    my $devisor     = $_[2];
-    my $msg         = $_[3];
 
-    push (@$refResult, $devisor);
-    $$refVal /= $devisor;
-    &progressMsgFound($$refVal, $devisor) if ($msg>=2);
+    push (@$refResult, $_[2]);
+    $$refVal /= $_[2];
+    &progressMsgFound($$refVal, $_[2], @$refResult) if ($_[3]>=2);
+    return 0;
+    # my $refResult   = $_[0];
+    # my $refVal      = $_[1];
+    # my $devisor     = $_[2];
+    # my $msg         = $_[3];
+
+    # push (@$refResult, $devisor);
+    # $$refVal /= $devisor;
+    # &progressMsgFound($$refVal, $devisor) if ($msg>=2);
 }
 
 
@@ -97,8 +136,7 @@ sub calcPrimeFactors
         &progressMsgDevisor($devisor) if ($msg>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisor(\@result, \$val, $devisor, $msg);
-            print "result so far: @result\n" if ($debug);
+            &foundDevisorAction(\@result, \$val, $devisor, $msg);
         }
     }
 
@@ -108,8 +146,7 @@ sub calcPrimeFactors
         &progressMsgDevisor($devisor) if ($msg>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisor(\@result, \$val, $devisor, $msg);
-            print "result so far: @result\n" if ($debug);
+            &foundDevisorAction(\@result, \$val, $devisor, $msg);
         }
     }
 
@@ -119,8 +156,7 @@ sub calcPrimeFactors
         &progressMsgDevisor($devisor) if ($msg>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisor(\@result, \$val, $devisor, $msg);
-            print "result so far: @result\n" if ($debug);
+            &foundDevisorAction(\@result, \$val, $devisor, $msg);
         }
     }
 
@@ -130,8 +166,7 @@ sub calcPrimeFactors
         &progressMsgDevisor($devisor) if ($msg>=2);
         while ( &isDevisible($val, $devisor) )
         {
-            &foundDevisor(\@result, \$val, $devisor, $msg);
-            print "result so far: @result\n" if ($debug);
+            &foundDevisorAction(\@result, \$val, $devisor, $msg);
         }
         $devisor += 2;
         if ( $devisor%5 == 0 ) { 
