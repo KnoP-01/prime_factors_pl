@@ -163,16 +163,35 @@ sub calcPrimeFactors
     $devisor = 7;
     while ( $val>=$devisor and $val>1 )
     {
+        # xx7
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
         {
             &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
         $devisor += 2;
-        if ( $devisor%5 == 0 ) { 
-            $devisor += 2;
-            if ( $devisor>$val/$devisor ) { $devisor = $val; }
+        # xx9
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
         }
+        $devisor += 2;
+        # xx1
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
+        }
+        $devisor += 2;
+        # xx3
+        &progressMsgDevisor($devisor) if ($verbosity>=2);
+        while ( &isDevisible($val, $devisor) )
+        {
+            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
+        }
+        $devisor += 4; # don't check xx5'
+        if ( $devisor>$val/$devisor ) { $devisor = $val; }
     }
 
     &progressMsgFinished($verbosity, $saveVal, @result);
