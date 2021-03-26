@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+# use bigint;
 
 
 my $debug = 0;
@@ -135,9 +136,7 @@ sub calcPrimeFactors
     {
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
     }
 
     $devisor = 3;
@@ -145,9 +144,7 @@ sub calcPrimeFactors
     {
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
     }
 
     $devisor = 5;
@@ -155,9 +152,7 @@ sub calcPrimeFactors
     {
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
     }
 
     $devisor = 7;
@@ -166,30 +161,22 @@ sub calcPrimeFactors
         # xx7
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
         $devisor += 2;
         # xx9
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
         $devisor += 2;
         # xx1
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
         $devisor += 2;
         # xx3
         &progressMsgDevisor($devisor) if ($verbosity>=2);
         while ( &isDevisible($val, $devisor) )
-        {
-            &foundDevisorAction(\@result, \$val, $devisor, $verbosity);
-        }
+        { &foundDevisorAction(\@result, \$val, $devisor, $verbosity); }
         $devisor += 4; # don't check xx5'
         if ( $devisor>$val/$devisor ) { $devisor = $val; }
     }
