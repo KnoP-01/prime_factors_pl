@@ -179,8 +179,26 @@ $testFailed += &test_primes($val2factor, @expectedResult);
 
 
 #test search for an edge case
+$val2factor=16565421654834351210;
+@expectedResult=qw/2 3 3 3 5 19 25439 126936083503/;
+$testFailed += &test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=6047373943605855168;
+@expectedResult=qw/2 2 2 2 2 2 3 3 3 3 3 7 7 7 7 11 19 19 31 31 31 37 37/;
+$testFailed += &test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
 $val2factor=1500111620135383;
 @expectedResult=qw/30000037 50003659/;
+$testFailed += &test_primes($val2factor, @expectedResult);
+
+
+#test search for an edge case
+$val2factor=958272075970124162;
+@expectedResult=qw/2 13 419 421 461 541 811 1033/;
 $testFailed += &test_primes($val2factor, @expectedResult);
 
 
