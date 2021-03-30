@@ -201,7 +201,7 @@ sub printHelp
     print "  N must be an integer without thousand separators!\n";
     print "\n";
     print "  Option:\n";
-    print "  --short, -s     : Print only the factors\n";
+    print "  --short, -s     : Print input value followed by it's factors\n";
     print "  --verbose, -v   : Print more verbose messages\n";
     print "  --vverbose, -vv : Print very verbose messages\n";
     print "\n";
@@ -211,7 +211,7 @@ sub printHelp
     print "  result: 24 has factors 2 2 2 3\n";
     print "\n";
     print "  prime_factors.pl --short 36\n";
-    print "  2 2 3 3\n";
+    print "  36 2 2 3 3\n";
 }
 
 
